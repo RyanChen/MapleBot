@@ -1,5 +1,5 @@
 const Discord = require('discord.js');
-const { token } = require('./token.json');
+const { token } = process.env.TOKEN
 const client = new Discord.Client();
 
 // 連上線時的事件
