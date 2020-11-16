@@ -1,7 +1,7 @@
 {
-  "name": "discordmaplebot",
+  "name": "maplebot",
   "version": "1.0.0",
-  "description": "",
+  "description": "Discord bot for MapleStory.",
   "main": "discord.js",
   "dependencies": {
     "discord.js": "^12.4.1"
@@ -10,6 +10,14 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RyanChen/MapleBot.git"
+  },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/RyanChen/MapleBot/issues"
+  },
+  "homepage": "https://github.com/RyanChen/MapleBot#readme"
 }
