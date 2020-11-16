@@ -1,0 +1,2 @@
+# MapleBot
+MapleBot for Discord
