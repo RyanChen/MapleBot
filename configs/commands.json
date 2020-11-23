@@ -1,0 +1,6 @@
+{
+    "author": "Show the author of bot",
+    "event": "Fetch events in this hour",
+    "help": "Show command list",
+    "version": "Show current version of bot"
+}
