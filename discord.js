@@ -3,6 +3,7 @@ const {prefix, version} = require('./configs/config.json');
 const commands = require('./configs/commands.json');
 const calendar = require('./modules/calendar.js');
 const schedule = require('node-schedule');
+const google_auth = require('./modules/google_auth.js');
 /***
 ┬ ┬ ┬ ┬ ┬ ┬
 │ │ │ │ │ |
@@ -34,7 +35,11 @@ client.on('ready', () => {
     channel = client.channels.cache.get(channel_id)
     var msg = "MapleBot is online!";
     send_msg_to_channel(msg);
-    ScanCalendar('hour');
+    google_auth.authorize().then((res) => { 
+        if (res) {
+            ScanCalendar('hour');
+        }
+     })
 });
 
 function ScanCalendar(freq) {

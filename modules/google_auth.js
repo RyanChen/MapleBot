@@ -5,7 +5,6 @@ const {google} = require('googleapis');
 const client_secret = process.env.CLIENT_SECRET
 const client_id = process.env.CLIENT_ID
 const redirect_uri = process.env.REDIRECT_URI
-const page_code = process.env.PAGE_CODE
 
 // If modifying these scopes, delete token.json.
 const SCOPES = ['https://www.googleapis.com/auth/calendar.readonly'];
@@ -22,11 +21,11 @@ const oAuth2Client = new google.auth.OAuth2(client_id, client_secret, redirect_u
  * @param {function} callback The callback to call with the authorized client.
  */
 function authorize() {
-    console.log("authorize...")
     // Check if we have previously stored a token.
     fs.readFile(TOKEN_PATH, (err, token) => {
         if (err) return getAccessToken(oAuth2Client);
         oAuth2Client.setCredentials(JSON.parse(token));
+        resolve('Authorize success');
     });
 }
 
@@ -43,9 +42,9 @@ function getAccessToken(Client) {
         input: process.stdin,
         output: process.stdout,
     });
-    rl.question('Enter the code from that page here: ', () => {
+    rl.question('Enter the code from that page here: ', (code) => {
         rl.close();
-        Client.getToken(page_code, (err, token) => {
+        Client.getToken(code, (err, token) => {
             if (err) return console.error('Error retrieving access token', err);
             Client.setCredentials(token);
             console.log(Client)
@@ -58,5 +57,12 @@ function getAccessToken(Client) {
     });
 }
 
-authorize()
+// authorize()
 module.exports = oAuth2Client
+module.exports.authorize = function () {
+    return new Promise((resolve, reject) => {
+        console.log("authorize...")
+        authorize();
+        resolve(true)
+    }).catch(error => { return; });
+};
