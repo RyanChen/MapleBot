@@ -5,6 +5,7 @@ const {google} = require('googleapis');
 const client_secret = process.env.CLIENT_SECRET
 const client_id = process.env.CLIENT_ID
 const redirect_uri = process.env.REDIRECT_URI
+const page_code = process.env.PAGE_CODE
 
 // If modifying these scopes, delete token.json.
 const SCOPES = ['https://www.googleapis.com/auth/calendar.readonly'];
@@ -42,9 +43,9 @@ function getAccessToken(Client) {
         input: process.stdin,
         output: process.stdout,
     });
-    rl.question('Enter the code from that page here: ', (code) => {
+    rl.question('Enter the code from that page here: ', () => {
         rl.close();
-        Client.getToken(code, (err, token) => {
+        Client.getToken(page_code, (err, token) => {
             if (err) return console.error('Error retrieving access token', err);
             Client.setCredentials(token);
             console.log(Client)
