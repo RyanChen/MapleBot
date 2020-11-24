@@ -20,12 +20,12 @@ const oAuth2Client = new google.auth.OAuth2(client_id, client_secret, redirect_u
  * @param {Object} credentials The authorization client credentials.
  * @param {function} callback The callback to call with the authorized client.
  */
-function authorize() {
+function authorize(msg) {
     // Check if we have previously stored a token.
     fs.readFile(TOKEN_PATH, (err, token) => {
-        if (err) return getAccessToken(oAuth2Client);
+        if (err) return getAccessToken(oAuth2Client, msg);
         oAuth2Client.setCredentials(JSON.parse(token));
-        resolve('Authorize success');
+        // resolve('Authorize success');
     });
 }
 
@@ -35,34 +35,45 @@ function authorize() {
 * @param {google.auth.OAuth2} oAuth2Client The OAuth2 client to get token for.
 * @param {getEventsCallback} callback The callback for the authorized client.
 */
-function getAccessToken(Client) {
+function getAccessToken(Client, msg) {
     const authUrl = Client.generateAuthUrl({access_type: 'offline', scope: SCOPES,});
-    console.log('Authorize this app by visiting this url:', authUrl);
-    const rl = readline.createInterface({
-        input: process.stdin,
-        output: process.stdout,
-    });
-    rl.question('Enter the code from that page here: ', (code) => {
-        rl.close();
-        Client.getToken(code, (err, token) => {
-            if (err) return console.error('Error retrieving access token', err);
-            Client.setCredentials(token);
-            console.log(Client)
-            // Store the token to disk for later program executions
-            fs.writeFile(TOKEN_PATH, JSON.stringify(token), (err) => {
-                if (err) return console.error(err);
-                console.log('Token stored to', TOKEN_PATH);
-            });
-        });
+    msg.reply('Authorize this app by visiting this url:' + authUrl);
+    // console.log('Authorize this app by visiting this url:', authUrl);
+    // const rl = readline.createInterface({
+    //     input: process.stdin,
+    //     output: process.stdout,
+    // });
+    msg.reply('Enter the code from that page here:');
+    msg.channel.awaitMessages(m => m.author.id == msg.author.id,
+        {max: 1, time: 30000}).then(collected => {
+            // only accept messages by the user who sent the command
+            // accept only 1 message, and return the promise after 30000ms = 30s
+            // first (and, in this case, only) message of the collection
+            if (collected.first().content != '') {
+                Client.getToken(collected.first().content, (err, token) => {
+                    if (err) return msg.reply('Error retrieving access token' + err);
+                    Client.setCredentials(token);
+                    msg.reply(Client)
+                    // Store the token to disk for later program executions
+                    fs.writeFile(TOKEN_PATH, JSON.stringify(token), (err) => {
+                        if (err) return msg.reply(err);
+                        msg.reply('Token stored to' + TOKEN_PATH);
+                    });
+                });
+            }
+            else {
+                msg.reply('Operation canceled.');
+            }
+    }).catch(() => {
+        msg.reply('No answer after 30 seconds, operation canceled.');
     });
 }
 
-// authorize()
 module.exports = oAuth2Client
-module.exports.authorize = function () {
+module.exports.authorize = function (msg) {
     return new Promise((resolve, reject) => {
         console.log("authorize...")
-        authorize();
+        authorize(msg);
         resolve(true)
     }).catch(error => { return; });
 };

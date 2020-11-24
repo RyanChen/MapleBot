@@ -1,9 +1,11 @@
 const Discord = require('discord.js');
-const {prefix, version} = require('./configs/config.json');
+const {prefix} = require('./configs/config.json');
 const commands = require('./configs/commands.json');
 const calendar = require('./modules/calendar.js');
 const schedule = require('node-schedule');
 const google_auth = require('./modules/google_auth.js');
+const EmbedMessages = require('./configs/message.js');
+
 /***
 ┬ ┬ ┬ ┬ ┬ ┬
 │ │ │ │ │ |
@@ -35,22 +37,20 @@ client.on('ready', () => {
     channel = client.channels.cache.get(channel_id)
     var msg = "MapleBot is online!";
     send_msg_to_channel(msg);
-    google_auth.authorize().then((res) => { 
-        if (res) {
-            ScanCalendar('hour');
-        }
-     })
 });
+
+var job;
+var alarm_status = false;
 
 function ScanCalendar(freq) {
     rule = SetRule(freq)
-    let job = schedule.scheduleJob(rule, () => {
+    job = schedule.scheduleJob(rule, () => {
         GetEventMessage().then((res, err) => {
             if (res != "") {
                 send_msg_to_channel(res, true);
             }
-        })
-    });
+        }).catch(error => { return; });
+    })
 }
 
 function GetEventMessage(){
@@ -129,8 +129,20 @@ function send_msg_to_channel(msg, is_everyone=false) {
 
 // 當 Bot 接收到訊息時的事件
 client.on('message', msg => {
-    if (msg.content === `${prefix}author`) {
-        msg.reply('The author of this bot is RyanChen.');
+    if (msg.content === `${prefix}alarm-on`) {
+        google_auth.authorize(msg).then((res) => { 
+            if (res) {
+                ScanCalendar('hour');
+                alarm_status = true;
+            }
+        })
+    }
+    else if (msg.content === `${prefix}alarm-off`) {
+        job.cancel();
+        alarm_status = false;
+    }
+    else if (msg.content === `${prefix}alarm-status`) {
+        msg.reply("Alarm status: " + alarm_status);
     }
     else if (msg.content === `${prefix}event`) {
         GetEventMessage().then((res, err) => {
@@ -143,14 +155,14 @@ client.on('message', msg => {
         })
     }
     else if (msg.content === `${prefix}help`) {
-        var m = "Commands:" + "\n";
-        for(var k in commands) {
-            m += `${prefix}` + k + " : " + commands[k] + "\n"
-        }
-        msg.reply(m);
+        msg.reply(EmbedMessages.CommandsMsgEmbed);
     }
-    else if (msg.content === `${prefix}version`) {
-        msg.reply(`The current version of bot is ${version}.`);
+    
+    else if (msg.content === `${prefix}info`) {
+        msg.reply(EmbedMessages.BotInfoMsgEmbed);
+    }
+    else if (msg.content === `${prefix}manager`) {
+        msg.reply(EmbedMessages.ManagersMsgEmbed);
     }
     else {
         if (msg.content.startsWith(`${prefix}`)) {

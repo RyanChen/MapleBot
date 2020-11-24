@@ -1,6 +1,8 @@
 {
-    "author": "Show the author of bot",
+    "alarm-on": "Turn on the event alarm",
+    "alarm-off": "Turn off the event alarm",
     "event": "Fetch events in this hour",
     "help": "Show command list",
-    "version": "Show current version of bot"
+    "info": "Show informations of bot",
+    "manager": "Show manager information of guild"
 }
