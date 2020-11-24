@@ -1,6 +1,7 @@
 {
     "alarm-on": "Turn on the event alarm",
     "alarm-off": "Turn off the event alarm",
+    "alarm-status": "Show alarm status",
     "event": "Fetch events in this hour",
     "help": "Show command list",
     "info": "Show informations of bot",
