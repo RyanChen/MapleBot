@@ -57,7 +57,7 @@ let listEventsPromiss = () => {
                         event_item['start'] = start
                         event_item['end'] = end
                         event_item['summary'] = event.summary
-                        event_item['description'] = event.description
+                        event_item['description'] = event.description == undefined ? "" : event.description
                         event_list.push(event_item)
                     }
                 });
