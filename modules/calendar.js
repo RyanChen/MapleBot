@@ -15,14 +15,14 @@ let listEventsPromiss = () => {
         let event_list = new Array();
         // var now = new Date(2020, 11, 20, 22, 0, 0);
         var now = new Date();
-        now.setMinutes(0);
+        // now.setMinutes(0);
         now.setSeconds(0);
         now.setMilliseconds(0);
         now_iso = now.toISOString()
 
         var now_timestamp = (new Date(now_iso)).getTime();
         // var next_hour_timestamp = now.setHours(now.getHours() + 1);
-        var next_timestamp = now.setMinutes(now.setMinutes() + 5);
+        var next_timestamp = now.setMinutes(now.getMinutes() + 5);
         var next_datetime = new Date(next_timestamp)
         var next_iso = next_datetime.toISOString();
 

@@ -53,7 +53,6 @@ function getAccessToken(Client, msg) {
                 Client.getToken(collected.first().content, (err, token) => {
                     if (err) return msg.reply('Error retrieving access token' + err);
                     Client.setCredentials(token);
-                    msg.reply(Client)
                     // Store the token to disk for later program executions
                     fs.writeFile(TOKEN_PATH, JSON.stringify(token), (err) => {
                         if (err) return msg.reply(err);

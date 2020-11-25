@@ -51,7 +51,7 @@ function ScanCalendar(freq=5) {
     //         }
     //     }).catch(error => { return; });
     // })
-    var rule_string = `* */${freq} * * * *`;
+    var rule_string = `0 */${freq} * * * *`;
     job = schedule.scheduleJob(rule_string, function(){
         GetEventMessage().then((res, err) => {
             if (res != "") {
