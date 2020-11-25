@@ -140,7 +140,7 @@ client.on('message', msg => {
     if (msg.content === `${prefix}alarm-on`) {
         google_auth.authorize(msg).then((res) => { 
             if (res) {
-                ScanCalendar('hour');
+                ScanCalendar(5);
                 alarm_status = true;
             }
         })
