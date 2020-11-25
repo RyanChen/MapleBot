@@ -21,18 +21,19 @@ let listEventsPromiss = () => {
         now_iso = now.toISOString()
 
         var now_timestamp = (new Date(now_iso)).getTime();
-        var next_hour_timestamp = now.setHours(now.getHours() + 1);
-        var next_hour_datetime = new Date(next_hour_timestamp)
-        var next_hour_iso = next_hour_datetime.toISOString();
+        // var next_hour_timestamp = now.setHours(now.getHours() + 1);
+        var next_timestamp = now.setMinutes(now.setMinutes() + 5);
+        var next_datetime = new Date(next_timestamp)
+        var next_iso = next_datetime.toISOString();
 
         const calendar = google.calendar({version: 'v3', auth: oAuth2Client});
         console.log(now_iso)
-        console.log(next_hour_iso)
+        console.log(next_iso)
         calendar.events.list({
             calendarId: calendarId,
-            timeMax: next_hour_iso,
+            timeMax: next_iso,
             timeMin: now_iso,
-            maxResults: 10,
+            // maxResults: 10,
             singleEvents: true,
             orderBy: 'startTime',
         }, (err, res) => {
@@ -42,7 +43,7 @@ let listEventsPromiss = () => {
             }
             const events = res.data.items;
             if (events.length) {
-                console.log('Upcoming 10 events:');
+                console.log('Upcoming events:');
                 events.map((event, i) => {
                     event_item = {}
                     const start = event.start.dateTime || event.start.date;
@@ -52,7 +53,7 @@ let listEventsPromiss = () => {
                     end_datetime = (new Date(end)).getTime()
 
                     // Compare in timestamp
-                    if ((start_datetime >= now_timestamp && start_datetime <= next_hour_timestamp) || (end_datetime >= now_timestamp && end_datetime >= next_hour_timestamp))
+                    if ((start_datetime >= now_timestamp && start_datetime <= next_timestamp) || (end_datetime >= now_timestamp && end_datetime >= next_timestamp))
                     {
                         event_item['start'] = start
                         event_item['end'] = end

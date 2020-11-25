@@ -6,17 +6,6 @@ const schedule = require('node-schedule');
 const google_auth = require('./modules/google_auth.js');
 const EmbedMessages = require('./configs/message.js');
 
-/***
-┬ ┬ ┬ ┬ ┬ ┬
-│ │ │ │ │ |
-│ │ │ │ │ └ day of week (0 - 7) (0 or 7 is Sun)
-│ │ │ │ └───── month (1 - 12)
-│ │ │ └────────── day of month (1 - 31)
-│ │ └─────────────── hour (0 - 23)
-│ └──────────────────── minute (0 - 59)
-└───────────────────────── second (0 - 59, OPTIONAL)
-***/
-
 const token = process.env.TOKEN
 const channel_id = process.env.CHANNEL_ID
 const client = new Discord.Client();
@@ -42,15 +31,34 @@ client.on('ready', () => {
 var job;
 var alarm_status = false;
 
-function ScanCalendar(freq) {
-    rule = SetRule(freq)
-    job = schedule.scheduleJob(rule, () => {
+/***
+┬ ┬ ┬ ┬ ┬ ┬
+│ │ │ │ │ |
+│ │ │ │ │ └ day of week (0 - 7) (0 or 7 is Sun)
+│ │ │ │ └───── month (1 - 12)
+│ │ │ └────────── day of month (1 - 31)
+│ │ └─────────────── hour (0 - 23)
+│ └──────────────────── minute (0 - 59)
+└───────────────────────── second (0 - 59, OPTIONAL)
+***/
+
+function ScanCalendar(freq=5) {
+    // rule = SetRule(freq)
+    // job = schedule.scheduleJob(rule, () => {
+    //     GetEventMessage().then((res, err) => {
+    //         if (res != "") {
+    //             send_msg_to_channel(res, true);
+    //         }
+    //     }).catch(error => { return; });
+    // })
+    var rule_string = `* */${freq} * * * *`;
+    job = schedule.scheduleJob(rule_string, function(){
         GetEventMessage().then((res, err) => {
             if (res != "") {
                 send_msg_to_channel(res, true);
             }
         }).catch(error => { return; });
-    })
+    });
 }
 
 function GetEventMessage(){
