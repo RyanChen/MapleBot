@@ -11,10 +11,8 @@ const channel_id = process.env.CHANNEL_ID
 const client = new Discord.Client();
 
 client.login(token).then(loggin => {
-    // Yay, it worked!
     console.log("Logging Successfully.");
 }).catch(e => {
-    // Oh no, it errored! Let's log it to console :)
     console.error(e);
 });
 
@@ -30,6 +28,8 @@ client.on('ready', () => {
 
 var job;
 var alarm_status = false;
+var to_everyone = true;
+var to_here = false;
 
 /***
 ┬ ┬ ┬ ┬ ┬ ┬
@@ -55,7 +55,7 @@ function ScanCalendar(freq=5) {
     job = schedule.scheduleJob(rule_string, function(){
         GetEventMessage().then((res, err) => {
             if (res != "") {
-                send_msg_to_channel(res, true);
+                send_msg_to_channel(res, to_everyone, to_here);
             }
         }).catch(error => { return; });
     });
@@ -126,9 +126,12 @@ function SetRule(freq) {
     return rule;
 }
 
-function send_msg_to_channel(msg, is_everyone=false) {
+function send_msg_to_channel(msg, is_everyone=false, is_here=false) {
     if (is_everyone) {
         channel.send("@everyone" + " " + msg);
+    }
+    else if (is_here) {
+        channel.send("@here" + " " + msg);
     }
     else {
         channel.send(msg);
@@ -137,20 +140,36 @@ function send_msg_to_channel(msg, is_everyone=false) {
 
 // 當 Bot 接收到訊息時的事件
 client.on('message', msg => {
-    if (msg.content === `${prefix}alarm-on`) {
-        google_auth.authorize(msg).then((res) => { 
-            if (res) {
-                ScanCalendar(5);
-                alarm_status = true;
+    if (msg.content.startsWith(`${prefix}alarm`)) {
+        var parameters = msg.content.split(' ');
+        if (parameters.length > 1) {
+            var para_1 = parameters[1];
+            if (para_1 == "on") {
+                google_auth.authorize(msg).then((res) => {
+                    if (res) {
+                        ScanCalendar(5);
+                        alarm_status = true;
+                        msg.reply("Alarm start.");
+                    }
+                })
             }
-        })
-    }
-    else if (msg.content === `${prefix}alarm-off`) {
-        job.cancel();
-        alarm_status = false;
-    }
-    else if (msg.content === `${prefix}alarm-status`) {
-        msg.reply("Alarm status: " + alarm_status);
+            else if (para_1 == "off") {
+                job.cancel();
+                alarm_status = false;
+                msg.reply("Alarm is stop.");
+            }
+            else if (para_1 == "status") {
+                msg.reply("Alarm status: " + alarm_status);
+            }
+            else
+            {
+                msg.reply('Parameter error. Please use ">>help" for detail.');
+            }
+        }
+        else
+        {
+            msg.reply('Parameter error. Please use ">>help" for detail.');
+        }
     }
     else if (msg.content === `${prefix}event`) {
         GetEventMessage().then((res, err) => {
@@ -171,6 +190,34 @@ client.on('message', msg => {
     }
     else if (msg.content === `${prefix}manager`) {
         msg.reply(EmbedMessages.ManagersMsgEmbed);
+    }
+    else if (msg.content.startsWith(`${prefix}target`))
+    {
+        var parameters = msg.content.split(' ');
+        if (parameters.length > 1) {
+            var para_1 = parameters[1];
+            if (para_1 == "everyone") {
+                to_everyone = true;
+                to_here = false;
+                msg.reply("Set alarm target to: everyone");
+            }
+            else if (para_1 == "here") {
+                to_everyone = false;
+                to_here = true;
+                msg.reply("Set alarm target to: here");
+            }
+            else {
+                to_everyone = false;
+                to_here = false;
+                msg.reply("Set alarm target to: None");
+            }
+        }
+        else
+        {
+            to_everyone = false;
+            to_here = false;
+            msg.reply("Set alarm target to: None");
+        }
     }
     else {
         if (msg.content.startsWith(`${prefix}`)) {
