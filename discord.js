@@ -25,11 +25,10 @@ client.on('ready', () => {
     // var msg = "MapleBot is online!";
     // send_msg_to_channel(msg);
 
-    google_auth.authorize(msg).then((res) => {
+    google_auth.authorize('token').then((res) => {
         if (res) {
             ScanCalendar(5);
             alarm_status = true;
-            msg.reply("Alarm start.");
         }
     })
 });
@@ -253,10 +252,8 @@ client.on('message', msg => {
 });
 
 async function clean_message() {
-    console.log("CLEAN!!!!!!")
-    var flag_run = true;
-    await channel.messages.fetch().then(messages => {
-        flag_run = messages.msg_size > 0 ? true : false
-        messages.forEach(msg => {msg.delete({ reason: "Clean Message" })});
-    }).then(() => { if (flag_run) { clean_message() }});
+    await channel.messages.fetch({ limit: 0 }).then(messages => {
+        console.log(messages.size);
+        // messages.forEach(msg => {msg.delete({ reason: "Clean Message" })});
+    });
 }
