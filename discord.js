@@ -22,8 +22,16 @@ var channel;
 client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`);
     channel = client.channels.cache.get(channel_id)
-    var msg = "MapleBot is online!";
-    send_msg_to_channel(msg);
+    // var msg = "MapleBot is online!";
+    // send_msg_to_channel(msg);
+
+    google_auth.authorize(msg).then((res) => {
+        if (res) {
+            ScanCalendar(5);
+            alarm_status = true;
+            msg.reply("Alarm start.");
+        }
+    })
 });
 
 var job;
@@ -140,7 +148,7 @@ function send_msg_to_channel(msg, is_everyone=false, is_here=false) {
 
 // 當 Bot 接收到訊息時的事件
 client.on('message', msg => {
-    if (msg.content.startsWith(`${prefix}alarm`)) {
+    if (msg.content.toLowerCase().startsWith(`${prefix}alarm`)) {
         var parameters = msg.content.split(' ');
         if (parameters.length > 1) {
             var para_1 = parameters[1];
@@ -171,17 +179,25 @@ client.on('message', msg => {
             msg.reply('Parameter error. Please use ">>help" for detail.');
         }
     }
-    else if (msg.content === `${prefix}clean`) {
-        async () => {
-            let fetched;
-            do {
-              fetched = await channel.fetchMessages({limit: 100});
-              message.channel.bulkDelete(fetched);
-            }
-            while(fetched.size >= 2);
-          }
+    else if (msg.content.toLowerCase() === `${prefix}clean`) {
+        clean_message();
+        // async function wipe() {
+        //     var msg_size = 100;
+        //     while (msg_size == 100) {
+        //         await msg.channel.bulkDelete(100).then(messages => msg_size = messages.size).catch(console.error);
+        //     }
+        //     msg.channel.send(`<@${msg.author.id}>\n> ${msg.content}`, { files: ['http://www.quickmeme.com/img/cf/cfe8938e72eb94d41bbbe99acad77a50cb08a95e164c2b7163d50877e0f86441.jpg'] })
+        // }
+        // wipe()
     }
-    else if (msg.content === `${prefix}event`) {
+    else if (msg.content.toLowerCase() === `${prefix}50`)
+    {
+        for (var i = 1 ; i < 50 ; i++)
+        {
+            channel.send(i);
+        }
+    }
+    else if (msg.content.toLowerCase() === `${prefix}event`) {
         GetEventMessage().then((res, err) => {
             if (res != "") {
                 msg.reply(res);
@@ -191,17 +207,17 @@ client.on('message', msg => {
             }
         })
     }
-    else if (msg.content === `${prefix}help`) {
+    else if (msg.content.toLowerCase() === `${prefix}help`) {
         msg.reply(EmbedMessages.CommandsMsgEmbed);
     }
     
-    else if (msg.content === `${prefix}info`) {
+    else if (msg.content.toLowerCase() === `${prefix}info`) {
         msg.reply(EmbedMessages.BotInfoMsgEmbed);
     }
-    else if (msg.content === `${prefix}manager`) {
+    else if (msg.content.toLowerCase() === `${prefix}manager`) {
         msg.reply(EmbedMessages.ManagersMsgEmbed);
     }
-    else if (msg.content.startsWith(`${prefix}target`))
+    else if (msg.content.toLowerCase().startsWith(`${prefix}target`))
     {
         var parameters = msg.content.split(' ');
         if (parameters.length > 1) {
@@ -230,8 +246,17 @@ client.on('message', msg => {
         }
     }
     else {
-        if (msg.content.startsWith(`${prefix}`)) {
+        if (msg.content.toLowerCase().startsWith(`${prefix}`)) {
             msg.reply('Command not found. Please use ">>help" for detail.');
         }
     }
 });
+
+async function clean_message() {
+    console.log("CLEAN!!!!!!")
+    var flag_run = true;
+    await channel.messages.fetch().then(messages => {
+        flag_run = messages.msg_size > 0 ? true : false
+        messages.forEach(msg => {msg.delete({ reason: "Clean Message" })});
+    }).then(() => { if (flag_run) { clean_message() }});
+}
