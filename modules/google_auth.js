@@ -5,6 +5,7 @@ const {google} = require('googleapis');
 const client_secret = process.env.CLIENT_SECRET
 const client_id = process.env.CLIENT_ID
 const redirect_uri = process.env.REDIRECT_URI
+const google_token = process.env.GOOGLE_TOKEN
 
 // If modifying these scopes, delete token.json.
 const SCOPES = ['https://www.googleapis.com/auth/calendar.readonly'];
@@ -22,11 +23,11 @@ const oAuth2Client = new google.auth.OAuth2(client_id, client_secret, redirect_u
  */
 function authorize(msg) {
     // Check if we have previously stored a token.
-    fs.readFile(TOKEN_PATH, (err, token) => {
-        if (err) return getAccessToken(oAuth2Client, msg);
-        oAuth2Client.setCredentials(JSON.parse(token));
+    // fs.readFile(TOKEN_PATH, (err, token) => {
+    //     if (err) return getAccessToken(oAuth2Client, msg);
+    oAuth2Client.setCredentials(JSON.parse(google_token));
         // resolve('Authorize success');
-    });
+    // });
 }
 
 /**

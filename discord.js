@@ -171,6 +171,16 @@ client.on('message', msg => {
             msg.reply('Parameter error. Please use ">>help" for detail.');
         }
     }
+    else if (msg.content === `${prefix}clean`) {
+        async () => {
+            let fetched;
+            do {
+              fetched = await channel.fetchMessages({limit: 100});
+              message.channel.bulkDelete(fetched);
+            }
+            while(fetched.size >= 2);
+          }
+    }
     else if (msg.content === `${prefix}event`) {
         GetEventMessage().then((res, err) => {
             if (res != "") {
