@@ -1,10 +1,10 @@
 const Discord = require('discord.js');
 const {prefix} = require('./configs/config.json');
-const commands = require('./configs/commands.json');
 const calendar = require('./modules/calendar.js');
 const schedule = require('node-schedule');
 const google_auth = require('./modules/google_auth.js');
 const EmbedMessages = require('./configs/message.js');
+const roleClaim = require('./modules/role-claim')
 
 const token = process.env.TOKEN
 const channel_id = process.env.CHANNEL_ID
@@ -21,6 +21,7 @@ var channel;
 // 連上線時的事件
 client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`);
+    roleClaim(client);
     channel = client.channels.cache.get(channel_id)
     // var msg = "MapleBot is online!";
     // send_msg_to_channel(msg);
