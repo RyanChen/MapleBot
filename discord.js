@@ -38,8 +38,9 @@ client.on('ready', () => {
 
 var job;
 var alarm_status = false;
-var to_everyone = true;
+var to_everyone = false;
 var to_here = false;
+var to_notify_group_only = true
 
 /***
 ┬ ┬ ┬ ┬ ┬ ┬
@@ -65,7 +66,7 @@ function ScanCalendar(freq=5) {
     job = schedule.scheduleJob(rule_string, function(){
         GetEventMessage().then((res, err) => {
             if (res != "") {
-                send_msg_to_channel(res, to_everyone, to_here);
+                send_msg_to_channel(res, to_everyone, to_here, to_notify_group_only);
             }
         }).catch(error => { return; });
     });
@@ -143,12 +144,15 @@ function SetRule(freq) {
     return rule;
 }
 
-function send_msg_to_channel(msg, is_everyone=false, is_here=false) {
+function send_msg_to_channel(msg, is_everyone=false, is_here=false, is_to_notify_group_only=false) {
     if (is_everyone) {
         channel.send("@everyone" + " " + msg);
     }
     else if (is_here) {
         channel.send("@here" + " " + msg);
+    }
+    else if(is_to_notify_group_only) {
+        channel.send("@BOT通知" + " " + msg);
     }
     else {
         channel.send(msg);
@@ -226,12 +230,20 @@ client.on('message', msg => {
             if (para_1 == "everyone") {
                 to_everyone = true;
                 to_here = false;
+                to_notify_group_only = false;
                 msg.reply("Set alarm target to: everyone");
             }
             else if (para_1 == "here") {
                 to_everyone = false;
                 to_here = true;
+                to_notify_group_only = false;
                 msg.reply("Set alarm target to: here");
+            }
+            else if (para_1 == "notify_group") {
+                to_everyone = false;
+                to_here = false;
+                to_notify_group_only = true;
+                msg.reply("Set alarm target to: notify group only");
             }
             else {
                 to_everyone = false;
