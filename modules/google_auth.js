@@ -75,5 +75,6 @@ module.exports.authorize = function (msg) {
         console.log("authorize...")
         authorize(msg);
         resolve(true)
+        console.log("Done.")
     }).catch(error => { return; });
 };
