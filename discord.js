@@ -25,6 +25,8 @@ client.on('ready', () => {
     // var msg = "MapleBot is online!";
     // send_msg_to_channel(msg);
 
+    CleanMessageJob();
+
     google_auth.authorize('token').then((res) => {
         if (res) {
             ScanCalendar(5);
@@ -65,6 +67,13 @@ function ScanCalendar(freq=5) {
                 send_msg_to_channel(res, to_everyone, to_here);
             }
         }).catch(error => { return; });
+    });
+}
+
+function CleanMessageJob() {
+    var rule_string = `0 0 0 * * *`;
+    job = schedule.scheduleJob(rule_string, function(){
+        clean_all_message_in_channel();
     });
 }
 
@@ -152,7 +161,7 @@ client.on('message', msg => {
         if (parameters.length > 1) {
             var para_1 = parameters[1];
             if (para_1 == "on") {
-                google_auth.authorize(msg).then((res) => {
+                google_auth.authorize('token').then((res) => {
                     if (res) {
                         ScanCalendar(5);
                         alarm_status = true;
@@ -179,15 +188,7 @@ client.on('message', msg => {
         }
     }
     else if (msg.content.toLowerCase() === `${prefix}clean`) {
-        clean_message();
-        // async function wipe() {
-        //     var msg_size = 100;
-        //     while (msg_size == 100) {
-        //         await msg.channel.bulkDelete(100).then(messages => msg_size = messages.size).catch(console.error);
-        //     }
-        //     msg.channel.send(`<@${msg.author.id}>\n> ${msg.content}`, { files: ['http://www.quickmeme.com/img/cf/cfe8938e72eb94d41bbbe99acad77a50cb08a95e164c2b7163d50877e0f86441.jpg'] })
-        // }
-        // wipe()
+        clean_all_message_in_channel();
     }
     else if (msg.content.toLowerCase() === `${prefix}50`)
     {
@@ -251,9 +252,27 @@ client.on('message', msg => {
     }
 });
 
-async function clean_message() {
-    await channel.messages.fetch({ limit: 0 }).then(messages => {
-        console.log(messages.size);
-        // messages.forEach(msg => {msg.delete({ reason: "Clean Message" })});
-    });
+async function clean_all_message_in_channel() {
+    const all_message = [];
+    let last_id;
+    let msg_size = 100;
+    while (msg_size >= 50) {
+        const options = { limit: 50 };
+        if (last_id) {
+            options.before = last_id;
+        }
+
+        await channel.messages.fetch(options).then(messages => {
+            messages.forEach(msg => { all_message.push(msg) })
+            last_id = messages.last().id;
+            msg_size = messages.size;
+        });
+    }
+
+    console.log("Total message numbers: " + all_message.length);
+
+    all_message.forEach(msg => {
+        console.log("Delete message: " + msg.content)
+        msg.delete({ reason: "Clean Message" })
+    })
 }
