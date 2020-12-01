@@ -152,7 +152,7 @@ function send_msg_to_channel(msg, is_everyone=false, is_here=false, is_to_notify
         channel.send("@here" + " " + msg);
     }
     else if(is_to_notify_group_only) {
-        channel.send("@BOT通知" + " " + msg);
+        channel.send("<@783275715507650581>" + " " + msg);
     }
     else {
         channel.send(msg);
