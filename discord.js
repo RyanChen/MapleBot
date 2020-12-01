@@ -284,6 +284,7 @@ async function clean_all_message_in_channel() {
 
     console.log("Total message numbers: " + all_message.length);
 
+    all_message.pop(); // Not delete the first message in channel
     all_message.forEach(msg => {
         console.log("Delete message: " + msg.content)
         msg.delete({ reason: "Clean Message" })
