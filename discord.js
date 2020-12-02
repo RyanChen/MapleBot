@@ -8,6 +8,8 @@ const roleClaim = require('./modules/role-claim')
 
 const token = process.env.TOKEN
 const channel_id = process.env.CHANNEL_ID
+const role_id = process.env.ROLE_ID
+
 const client = new Discord.Client();
 
 client.login(token).then(loggin => {
@@ -152,7 +154,7 @@ function send_msg_to_channel(msg, is_everyone=false, is_here=false, is_to_notify
         channel.send("@here" + " " + msg);
     }
     else if(is_to_notify_group_only) {
-        channel.send("<@&783275715507650581>" + " " + msg);
+        channel.send("<@&" + role_id + ">" + " " + msg);
     }
     else {
         channel.send(msg);
@@ -276,9 +278,11 @@ async function clean_all_message_in_channel() {
         }
 
         await channel.messages.fetch(options).then(messages => {
-            messages.forEach(msg => { all_message.push(msg) })
-            last_id = messages.last().id;
             msg_size = messages.size;
+            if (messages.size > 0) {
+                messages.forEach(msg => { all_message.push(msg) })
+                last_id = messages.last().id;
+            }
         });
     }
 
