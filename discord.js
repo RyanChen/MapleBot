@@ -23,6 +23,7 @@ var channel;
 // 連上線時的事件
 client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`);
+
     roleClaim(client);
     channel = client.channels.cache.get(channel_id)
     // var msg = "MapleBot is online!";
@@ -76,7 +77,7 @@ function ScanCalendar(freq=5) {
 
 function CleanMessageJob() {
     var rule_string = `0 0 0 * * *`;
-    job = schedule.scheduleJob(rule_string, function(){
+    schedule.scheduleJob(rule_string, function(){
         clean_all_message_in_channel();
     });
 }
