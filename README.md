@@ -28,22 +28,25 @@ Auto scan calendar if there are events send message to channel (according to CHA
 
 ## Commands in this bot
 You can using >>help for detail in discord.
->\>>alarm
->Control and check the status of alarm.
->-on: Turn on the event alarm.
->-off: Turn off the event alarm.
->-status: Show alarm status.
->\>>clean
->Clean all messages in the channel.
->\>>event
->Fetch events in this hour
->\>>help
->Show command list
->\>>info
->Show informations of bot
->\>>manager
->Show manager information of guild
->\>>target
->The target to remind.
->-everyone: Every user even offline.
->-here: Users online only.
+```
+>>alarm
+Control and check the status of alarm.
+  -on: Turn on the event alarm.
+  -off: Turn off the event alarm.
+  -status: Show alarm status.
+>>clean
+Clean all messages in the channel.
+>>event
+Fetch events in this hour
+>>help
+Show command list
+>>info
+Show informations of bot
+>>manager
+Show manager information of guild
+>>target
+The target to remind.
+  -everyone: Every user even offline.
+  -here: Users online only.
+  -notify_group: Notify specific group.
+```
