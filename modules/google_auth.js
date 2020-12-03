@@ -23,11 +23,11 @@ const oAuth2Client = new google.auth.OAuth2(client_id, client_secret, redirect_u
  */
 function authorize(msg) {
     // Check if we have previously stored a token.
-    // fs.readFile(TOKEN_PATH, (err, token) => {
-    //     if (err) return getAccessToken(oAuth2Client, msg);
-    oAuth2Client.setCredentials(JSON.parse(google_token));
-        // resolve('Authorize success');
-    // });
+    fs.readFile(TOKEN_PATH, (err, token) => {
+        if (err) return getAccessToken(oAuth2Client, msg);
+        oAuth2Client.setCredentials(JSON.parse(google_token));
+        resolve('Authorize success');
+    });
 }
 
 /**

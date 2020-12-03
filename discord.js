@@ -26,17 +26,10 @@ client.on('ready', () => {
 
     roleClaim(client);
     channel = client.channels.cache.get(channel_id)
-    // var msg = "MapleBot is online!";
-    // send_msg_to_channel(msg);
+    var msg = "MapleBot is online!";
+    send_msg_to_channel(msg);
 
     CleanMessageJob();
-
-    google_auth.authorize('token').then((res) => {
-        if (res) {
-            ScanCalendar(5);
-            alarm_status = true;
-        }
-    })
 });
 
 var job;
@@ -169,7 +162,7 @@ client.on('message', msg => {
         if (parameters.length > 1) {
             var para_1 = parameters[1];
             if (para_1 == "on") {
-                google_auth.authorize('token').then((res) => {
+                google_auth.authorize(msg).then((res) => {
                     if (res) {
                         ScanCalendar(5);
                         alarm_status = true;
