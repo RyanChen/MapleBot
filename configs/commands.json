@@ -5,5 +5,5 @@
     "help": "Show command list",
     "info": "Show informations of bot",
     "manager": "Show manager information of guild",
-    "target": "The target to remind.\n -everyone: Every user even offline.\n -here: Users online only."
+    "target": "The target to remind.\n -everyone: Every user even offline.\n -here: Users online only.\n -notify_group: Notify specific group."
 }
