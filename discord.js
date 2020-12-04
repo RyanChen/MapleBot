@@ -47,7 +47,7 @@ var to_notify_group_only = true
 
 /***
 ┬ ┬ ┬ ┬ ┬ ┬
-│ │ │ │ │ |
+│ │ │ │ │ │
 │ │ │ │ │ └ day of week (0 - 7) (0 or 7 is Sun)
 │ │ │ │ └───── month (1 - 12)
 │ │ │ └────────── day of month (1 - 31)
@@ -169,6 +169,9 @@ client.on('message', msg => {
         if (parameters.length > 1) {
             var para_1 = parameters[1];
             if (para_1 == "on") {
+                if (job) {
+                    job.cancel()
+                }
                 google_auth.authorize('token').then((res) => {
                     if (res) {
                         ScanCalendar(5);
@@ -197,13 +200,6 @@ client.on('message', msg => {
     }
     else if (msg.content.toLowerCase() === `${prefix}clean`) {
         clean_all_message_in_channel();
-    }
-    else if (msg.content.toLowerCase() === `${prefix}50`)
-    {
-        for (var i = 1 ; i < 50 ; i++)
-        {
-            channel.send(i);
-        }
     }
     else if (msg.content.toLowerCase() === `${prefix}event`) {
         GetEventMessage().then((res, err) => {
