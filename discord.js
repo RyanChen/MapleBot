@@ -148,6 +148,12 @@ function SetRule(freq) {
 }
 
 function send_msg_to_channel(msg, is_everyone=false, is_here=false, is_to_notify_group_only=false) {
+    // 『公會戰』 特別通知everyone
+    if (msg.startsWith('『公會戰』'))
+    {
+        is_everyone = true;
+    }
+
     if (is_everyone) {
         channel.send("@everyone" + " " + msg);
     }
