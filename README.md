@@ -13,6 +13,7 @@ Auto scan calendar if there are events send message to channel (according to CHA
 > set BOT_ID=your bot id
 > set CALENDAR_ID=your canlendar id
 > set CHANNEL_ID=your channel id
+> set CHAT_CHANNEL_ID=your chat channel id
 > set CLIENT_ID=your client id
 > set CLIENT_SECRET=your client secret
 > set GOOGLE_TOKEN=your google token (if you run the heroku branch, this is needed)
