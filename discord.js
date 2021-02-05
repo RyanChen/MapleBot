@@ -9,6 +9,7 @@ const roleClaim = require('./modules/role-claim')
 const token = process.env.TOKEN
 const channel_id = process.env.CHANNEL_ID
 const role_id = process.env.ROLE_ID
+const chat_channel_id = process.env.CHAT_CHANNEL_ID
 
 const client = new Discord.Client();
 
@@ -37,6 +38,11 @@ client.on('ready', () => {
             alarm_status = true;
         }
     })
+});
+
+client.on('guildMemberAdd', () => {
+    chat_channel = client.channels.cache.get(chat_channel_id)
+    chat_channel.send("嗨，歡迎加入『伏時夢長』Discord頻道～請先看公告，然後到ID對照區留言喔～")
 });
 
 var job;
