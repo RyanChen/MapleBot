@@ -24,7 +24,7 @@ const ManagersMsgEmbed = new Discord.MessageEmbed()
     .setThumbnail('https://i.imgur.com/irYgCg7.png')
     .addFields(
 		{ name: '會長', value: '綠綠安m' },
-        { name: '副會長', value: 'Ryan迪迪\n折花無痕\n水裡的魚小冷\nHeyYeah黑夜c\n薏仁0e\nFF鼻樑終結者\n急凍小美\nAquaBlaze'},
+        { name: '副會長', value: 'Ryan迪迪\n折花無痕\n水裡的魚小冷\nHeyYeah黑夜c\n薏仁0e\nFF鼻樑終結者\n急凍小美'},
     )
 
 try {
