@@ -15,7 +15,7 @@ module.exports = (client) => {
 
     const reactions = []
 
-    let emojiText = '點選下方Bot icon加入或退出BOT通知身分群\n\n'
+    let emojiText = '點選下方icon加入或退出身分群\n\n'
     for (const key in emojis) {
       const emoji = getEmoji(key)
       reactions.push(emoji)
