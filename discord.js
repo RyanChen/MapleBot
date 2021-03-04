@@ -10,6 +10,8 @@ const token = process.env.TOKEN
 const channel_id = process.env.CHANNEL_ID
 const role_id = process.env.ROLE_ID
 const chat_channel_id = process.env.CHAT_CHANNEL_ID
+const manager_role_id = process.env.MANAGER_ROLE_ID
+const styler_role_id = process.env.STYLER_ROLE_ID
 
 const client = new Discord.Client();
 
@@ -154,24 +156,37 @@ function SetRule(freq) {
 }
 
 function send_msg_to_channel(msg, is_everyone=false, is_here=false, is_to_notify_group_only=false) {
-    // 『公會戰』 特別通知everyone
-    if (msg.startsWith('『公會戰』'))
+    if (msg.startsWith('[全體]')) // [全體]
     {
-        is_everyone = true;
-    }
-
-    if (is_everyone) {
+        msg = msg.replace('[全體]', '')
         channel.send("@everyone" + " " + msg);
     }
-    else if (is_here) {
-        channel.send("@here" + " " + msg);
+    else if (msg.startsWith('[管理]')) // [管理]
+    {
+        msg = msg.replace('[管理]', '')
+        channel.send("<@&" + manager_role_id + ">" + " " + msg);
     }
-    else if(is_to_notify_group_only) {
-        channel.send("<@&" + role_id + ">" + " " + msg);
+    else if (msg.startsWith('[美髮]')) // [美髮]
+    {
+        msg = msg.replace('[美髮]', '')
+        channel.send("<@&" + styler_role_id + ">" + " " + msg);
     }
     else {
-        channel.send(msg);
+        channel.send("<@&" + role_id + ">" + " " + msg);
     }
+
+    // if (is_everyone) {
+    //     channel.send("@everyone" + " " + msg);
+    // }
+    // else if (is_here) {
+    //     channel.send("@here" + " " + msg);
+    // }
+    // else if(is_to_notify_group_only) {
+    //     channel.send("<@&" + role_id + ">" + " " + msg);
+    // }
+    // else {
+    //     channel.send(msg);
+    // }
 }
 
 // 當 Bot 接收到訊息時的事件
