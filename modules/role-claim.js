@@ -10,7 +10,7 @@ module.exports = (client) => {
     const emojis = {
         bot: 'BOT通知',
         mud: '萌新',
-        hair_ticket: '外觀玩家'
+        hair_ticket: '負責可愛'
     }
 
     const reactions = []
