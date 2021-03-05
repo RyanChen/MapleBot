@@ -103,14 +103,18 @@ function GetEventMessage(){
             if (res.length) {
                 msg = ""
                 res.map((event, i) => {
+                    console.log("-----")
+                    console.log(event)
+                    console.log(event.location)
+                    console.log("-----")
+                    msg = "『" + event.summary + "』" + " " + event.description
+
                     if (event.location != "")
                     {
-                        msg = "『" + event.summary + "』" + " " + event.description
                         EventMessage[event.location].push(msg)
                     }
                     else
                     {
-                        msg = "『" + event.summary + "』" + " " + event.description
                         EventMessage["BOT"].push(msg)
                     }
                 });
@@ -172,29 +176,32 @@ function send_msg_to_channel(msg, is_everyone=false, is_here=false, is_to_notify
         console.log(key, value);
         m = ""
 
-        msg[key].forEach(data => {
-            if (m != "")
-            {
-                m += "\n";
-            }
-            m += data
-        })
+        if (value.length > 0)
+        {
+            value.forEach(data => {
+                if (m != "")
+                {
+                    m += "\n";
+                }
+                m += data
+            })
 
-        if (key == 'BOT') // [BOT]
-        {
-            channel.send("<@&" + role_id + ">" + " " + m);
-        }
-        else if (key == '全體') // [全體]
-        {
-            channel.send("@everyone" + " " + m);
-        }
-        else if (key == '管理') // [管理]
-        {
-            channel.send("<@&" + manager_role_id + ">" + " " + m);
-        }
-        else if (key == '外觀') // [外觀]
-        {
-            channel.send("<@&" + styler_role_id + ">" + " " + m);
+            if (key == 'BOT') // [BOT]
+            {
+                channel.send("<@&" + role_id + ">" + " " + m);
+            }
+            else if (key == '全體') // [全體]
+            {
+                channel.send("@everyone" + " " + m);
+            }
+            else if (key == '管理') // [管理]
+            {
+                channel.send("<@&" + manager_role_id + ">" + " " + m);
+            }
+            else if (key == '外觀') // [外觀]
+            {
+                channel.send("<@&" + styler_role_id + ">" + " " + m);
+            }
         }
     }
     // if (msg.startsWith('[全體]')) // [全體]
