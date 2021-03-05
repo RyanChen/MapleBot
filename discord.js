@@ -103,10 +103,6 @@ function GetEventMessage(){
             if (res.length) {
                 msg = ""
                 res.map((event, i) => {
-                    console.log("-----")
-                    console.log(event)
-                    console.log(event.location)
-                    console.log("-----")
                     msg = "『" + event.summary + "』" + " " + event.description
 
                     if (event.location != "")
@@ -173,7 +169,6 @@ function SetRule(freq) {
 function send_msg_to_channel(msg, is_everyone=false, is_here=false, is_to_notify_group_only=false) {
     var m;
     for (const [key, value] of Object.entries(msg)) {
-        console.log(key, value);
         m = ""
 
         if (value.length > 0)
@@ -204,37 +199,6 @@ function send_msg_to_channel(msg, is_everyone=false, is_here=false, is_to_notify
             }
         }
     }
-    // if (msg.startsWith('[全體]')) // [全體]
-    // {
-    //     msg = msg.replace('[全體]', '')
-    //     channel.send("@everyone" + " " + msg);
-    // }
-    // else if (msg.startsWith('[管理]')) // [管理]
-    // {
-    //     msg = msg.replace('[管理]', '')
-    //     channel.send("<@&" + manager_role_id + ">" + " " + msg);
-    // }
-    // else if (msg.startsWith('[外觀]')) // [外觀]
-    // {
-    //     msg = msg.replace('[外觀]', '')
-    //     channel.send("<@&" + styler_role_id + ">" + " " + msg);
-    // }
-    // else {
-    //     channel.send("<@&" + role_id + ">" + " " + msg);
-    // }
-
-    // if (is_everyone) {
-    //     channel.send("@everyone" + " " + msg);
-    // }
-    // else if (is_here) {
-    //     channel.send("@here" + " " + msg);
-    // }
-    // else if(is_to_notify_group_only) {
-    //     channel.send("<@&" + role_id + ">" + " " + msg);
-    // }
-    // else {
-    //     channel.send(msg);
-    // }
 }
 
 // 當 Bot 接收到訊息時的事件
