@@ -91,17 +91,28 @@ function CleanMessageJob() {
 }
 
 function GetEventMessage(){
-    var EventMessage = ""
+    var EventMessage = {
+        "BOT": [],
+        "全體": [],
+        "管理": [],
+        "外觀": []
+    }
+    var msg;
     return new Promise((resolve, reject) => {
         calendar.get_event().then((res) => {
             if (res.length) {
+                msg = ""
                 res.map((event, i) => {
-                    if (EventMessage != "")
+                    if (event.location != "")
                     {
-                        EventMessage += "\n";
+                        msg = "『" + event.summary + "』" + " " + event.description
+                        EventMessage[event.location].push(msg)
                     }
-
-                    EventMessage += "『" + event.summary + "』" + " " + event.description;
+                    else
+                    {
+                        msg = "『" + event.summary + "』" + " " + event.description
+                        EventMessage["BOT"].push(msg)
+                    }
                 });
             }
 
@@ -156,24 +167,54 @@ function SetRule(freq) {
 }
 
 function send_msg_to_channel(msg, is_everyone=false, is_here=false, is_to_notify_group_only=false) {
-    if (msg.startsWith('[全體]')) // [全體]
-    {
-        msg = msg.replace('[全體]', '')
-        channel.send("@everyone" + " " + msg);
+    var m;
+    for (const [key, value] of Object.entries(msg)) {
+        console.log(key, value);
+        m = ""
+
+        msg[key].forEach(data => {
+            if (m != "")
+            {
+                m += "\n";
+            }
+            m += data
+        })
+
+        if (key == 'BOT') // [BOT]
+        {
+            channel.send("<@&" + role_id + ">" + " " + m);
+        }
+        else if (key == '全體') // [全體]
+        {
+            channel.send("@everyone" + " " + m);
+        }
+        else if (key == '管理') // [管理]
+        {
+            channel.send("<@&" + manager_role_id + ">" + " " + m);
+        }
+        else if (key == '外觀') // [外觀]
+        {
+            channel.send("<@&" + styler_role_id + ">" + " " + m);
+        }
     }
-    else if (msg.startsWith('[管理]')) // [管理]
-    {
-        msg = msg.replace('[管理]', '')
-        channel.send("<@&" + manager_role_id + ">" + " " + msg);
-    }
-    else if (msg.startsWith('[美髮]')) // [美髮]
-    {
-        msg = msg.replace('[美髮]', '')
-        channel.send("<@&" + styler_role_id + ">" + " " + msg);
-    }
-    else {
-        channel.send("<@&" + role_id + ">" + " " + msg);
-    }
+    // if (msg.startsWith('[全體]')) // [全體]
+    // {
+    //     msg = msg.replace('[全體]', '')
+    //     channel.send("@everyone" + " " + msg);
+    // }
+    // else if (msg.startsWith('[管理]')) // [管理]
+    // {
+    //     msg = msg.replace('[管理]', '')
+    //     channel.send("<@&" + manager_role_id + ">" + " " + msg);
+    // }
+    // else if (msg.startsWith('[外觀]')) // [外觀]
+    // {
+    //     msg = msg.replace('[外觀]', '')
+    //     channel.send("<@&" + styler_role_id + ">" + " " + msg);
+    // }
+    // else {
+    //     channel.send("<@&" + role_id + ">" + " " + msg);
+    // }
 
     // if (is_everyone) {
     //     channel.send("@everyone" + " " + msg);
