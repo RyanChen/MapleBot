@@ -242,7 +242,7 @@ let delete_first_row = (table_name) => {
 // truncate table
 let truncate_table = (table_name) => {
     return new Promise((resolve, reject) => {
-        sql = `TRUNCATE TABLE ${table_name}`
+        sql = `TRUNCATE TABLE ${table_name} RESTART IDENTITY CASCADE`
         pool.query(sql, (err, res) => {
             if (err) {
                 console.log(err, res)

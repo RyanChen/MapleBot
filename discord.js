@@ -244,14 +244,21 @@ client.on('message', msg => {
             if (rules.test(msg.content)) {
                 result = msg.content.match(rules)
                 serial_data = result[0].trim()
-                serial.insert_serial(serial_data, sender).then((res, err) => {
-                    if (res != false) {
-                        msg.reply('序號儲存成功，感謝您的贈與！');
-                    }
-                    else {
-                        msg.reply('序號儲存失敗！');
-                    }
-                })
+                parameters = serial_data.split('^');
+                if (parameters.length < 2)
+                {
+                    msg.reply('格式錯誤，輸入格式應為 ">>save_sn 序號名稱^序號^使用期限"');
+                }
+                else {
+                    serial.insert_serial(serial_data, sender).then((res, err) => {
+                        if (res != false) {
+                            msg.reply('序號儲存成功，感謝您的贈與！');
+                        }
+                        else {
+                            msg.reply('序號儲存失敗！');
+                        }
+                    })
+                }
             }
             else
             {
