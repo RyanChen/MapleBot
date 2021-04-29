@@ -8,7 +8,7 @@ const BotInfoMsgEmbed = new Discord.MessageEmbed()
 	// .setURL('https://discord.js.org/')
 	.setAuthor('RyanChen', 'https://i.imgur.com/GMIaI2q.png')
 	.setDescription('MapleBot for guild named 『伏時夢長』')
-	.setThumbnail('https://i.imgur.com/irYgCg7.png')
+	.setThumbnail('https://i.imgur.com/ZimIpbD.png')
 	.addFields(
 		{ name: 'Bot Version', value: version, inline: true },
         { name: 'Bot Author', value: 'RyanChen', inline: true },
@@ -21,7 +21,7 @@ const ManagersMsgEmbed = new Discord.MessageEmbed()
     .setColor('#ff00ff')
     .setTitle('管理者資訊')
     .setDescription('公會會長以及副會長資訊列表')
-    .setThumbnail('https://i.imgur.com/irYgCg7.png')
+    .setThumbnail('https://i.imgur.com/ZimIpbD.png')
     .addFields(
 		{ name: '會長', value: '綠綠安m' },
         { name: '副會長', value: 'Ryan迪迪\n折花無痕\n水裡的魚小冷\nHeyYeah黑夜c\n薏仁0e\nFF鼻樑終結者\n急凍小美'},
@@ -70,6 +70,7 @@ const CommandsMsgEmbed = new Discord.MessageEmbed()
     .setTitle('Commands')
     .setDescription('All commands of this bot are list below:')
     .addFields(command)
+    .setFooter('Copyright © 2020 RyanChen All rights reserved.', 'https://i.imgur.com/GMIaI2q.png');
 
 function SetAlarmStatus(status) {
     alarm_status = status;
