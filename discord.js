@@ -260,11 +260,12 @@ client.on('message', msg => {
             return
         }
         else if (msg.content.toLowerCase().startsWith(`${prefix}get_sn`)) {
-            parameters = msg.content.split(' ');
+            var rules = /\s.*/
             recipient = msg.author.id
 
-            if (parameters.length > 1) {
-                id = parameters[1];
+            if (rules.test(msg.content)) {
+                result = msg.content.match(rules)
+                id = result[0].trim()
                 serial.get_serial(id, recipient).then((res, err) => {
                     if (res != false) {
                         EmbedMessages.set_single_serial_msg(res).then((set_res, err) => {
@@ -422,6 +423,26 @@ client.on('message', msg => {
     }
     else if (msg.content.toLowerCase().startsWith(`${prefix}save_sn`) || msg.content.toLowerCase().startsWith(`${prefix}get_sn`) || msg.content.toLowerCase() === `${prefix}list_sn`) {
         msg.reply("使用序號相關功能指令，請私訊機器人");
+    }
+    else if (msg.content.toLowerCase().startsWith(`${prefix}truncate`)) {
+        var rules = /\s.*/
+
+        if (rules.test(msg.content)) {
+            result = msg.content.match(rules)
+            table_name = result[0].trim()
+            serial.truncate_table(table_name).then((res, err) => {
+                if (res != false) {
+                    msg.reply(`資料表 ${table_name} 清除成功！`);
+                }
+                else {
+                    msg.reply('資料表 ${table_name} 清除失敗');
+                }
+            })
+        }
+        else
+        {
+            msg.reply('格式錯誤，輸入格式應為 ">>truncate_table 資料表名稱"');
+        }
     }
     else {
         if (msg.content.toLowerCase().startsWith(`${prefix}`)) {

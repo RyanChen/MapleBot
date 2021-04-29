@@ -27,6 +27,10 @@ module.exports.list_serial = function () {
     return list_serial()
 };
 
+module.exports.truncate_table = function (table_name) {
+    return truncate_table(table_name)
+};
+
 // Create table
 let create_table = (sql) => {
     return new Promise((resolve, reject) => {
@@ -227,4 +231,21 @@ let delete_first_row = (table_name) => {
             }
         })
     }).catch(error => { console.log(error); reject(0); });
+};
+
+// truncate table
+let truncate_table = (table_name) => {
+    return new Promise((resolve, reject) => {
+        sql = `TRUNCATE TABLE ${table_name}`
+        pool.query(sql, (err, res) => {
+            if (err) {
+                console.log(err, res)
+                resolve(false)
+            }
+            else {
+                console.log(`Table "${table_name}" truncated`)
+                resolve(true)
+            }
+        })
+    }).catch(error => { console.log(error); reject(false); });
 };
