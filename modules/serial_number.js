@@ -37,7 +37,7 @@ let create_table = (sql) => {
         pool.query(sql, (err, res) => {
             if (err) {
                 console.log(err, res)
-                reject(false)
+                resolve(false)
             }
             else {
                 resolve(true)
@@ -54,13 +54,13 @@ let drop_table = (table_name) => {
         pool.query(sql, (err, res) => {
             if (err) {
                 console.log(err, res)
-                reject(false)
+                resolve(false)
             }
             else {
                 resolve(res)
             }
         })
-    }).catch(error => { console.log(error); return ; });
+    }).catch(error => { console.log(error); reject(false); });
 };
 
 // Insert serial data to table
@@ -75,34 +75,40 @@ let insert_serial = (serial_data, sender) => {
         }).then(() => {
             console.log("===== Serial Info =====")
             parameters = serial_data.split('^');
-            name = parameters[0]
-            serial_number = parameters[1]
-            if (parameters[2] == undefined || parameters[2] == "")
+            if (parameters.length < 2)
             {
-                due_date = "NULL"
+                resolve(false)
             }
-            else
-            {
-                due_date = "TO_TIMESTAMP('" + parameters[2] + "', 'YYYY-MM-DD HH:MI:SS')"
+            else {
+                name = parameters[0]
+                serial_number = parameters[1]
+                if (parameters[2] == undefined || parameters[2] == "")
+                {
+                    due_date = "NULL"
+                }
+                else
+                {
+                    due_date = "TO_TIMESTAMP('" + parameters[2] + "', 'YYYY-MM-DD HH:MI:SS')"
+                }
+                console.log("Name = " + name)
+                console.log("serial_number = " + serial_number)
+                console.log("due_date = " + due_date)
+                console.log("share_by = " + sender)
+                console.log("===== Serial Info =====")
+
+                sql = `INSERT INTO serial (name, serial_number, due_date, available, share_time, share_by, recipient, send_time) VALUES ('${name}', '${serial_number}', ${due_date}, true, NOW(), '${sender}', NULL, NULL)`
+
+                pool.query(sql, (err, res) => {
+                    if (err) {
+                        console.log(err, res)
+                        resolve(false)
+                    }
+                    else {
+                        console.log(res)
+                        resolve(true)
+                    }
+                })
             }
-            console.log("Name = " + name)
-            console.log("serial_number = " + serial_number)
-            console.log("due_date = " + due_date)
-            console.log("share_by = " + sender)
-            console.log("===== Serial Info =====")
-
-            sql = `INSERT INTO serial (name, serial_number, due_date, available, share_time, share_by, recipient, send_time) VALUES ('${name}', '${serial_number}', ${due_date}, true, NOW(), '${sender}', NULL, NULL)`
-
-            pool.query(sql, (err, res) => {
-                if (err) {
-                    console.log(err, res)
-                    reject(false)
-                }
-                else {
-                    console.log(res)
-                    resolve(true)
-                }
-            })
         })
     }).catch(error => { console.log(error); reject(false); });
 };
@@ -184,7 +190,7 @@ let list_serial = () => {
         pool.query(sql, (err, res) => {
             if (err) {
                 console.log(err, res)
-                reject(false)
+                resolve(false)
             }
             else {
                 if (res.rowCount <= 0) {
