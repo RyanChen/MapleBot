@@ -156,11 +156,11 @@ let set_server_status_msg = (server_status_data) => {
 
         if (others_latency_info == "")
         {
-            others_latency_info = "建議 " + min_latency_channel["Name"] + "：" + min_latency_channel["Latency"] + " ms" + " 避開 " + max_latency_channel["Name"] + "：" + max_latency_channel["Latency"] + " ms"
+            others_latency_info = "**建議** " + min_latency_channel["Name"] + "：" + min_latency_channel["Latency"] + " ms" + " **避開** " + max_latency_channel["Name"] + "：" + max_latency_channel["Latency"] + " ms"
         }
         else
         {
-            others_latency_info = others_latency_info + "\n" + "建議 " + min_latency_channel["Name"] + "：" + min_latency_channel["Latency"] + " ms" + " 避開 " + max_latency_channel["Name"] + "：" + max_latency_channel["Latency"] + " ms"
+            others_latency_info = others_latency_info + "\n" + "**建議** " + min_latency_channel["Name"] + "：" + min_latency_channel["Latency"] + " ms" + " **避開** " + max_latency_channel["Name"] + "：" + max_latency_channel["Latency"] + " ms"
         }
     } catch (error) {
         console.log(error)
