@@ -6,6 +6,7 @@ const google_auth = require('./modules/google_auth.js');
 const EmbedMessages = require('./configs/message.js');
 const roleClaim = require('./modules/role-claim.js')
 const serial = require('./modules/serial_number.js');
+const tcpp = require('tcp-ping');
 
 const token = process.env.TOKEN
 const channel_id = process.env.CHANNEL_ID
@@ -14,6 +15,7 @@ const chat_channel_id = process.env.CHAT_CHANNEL_ID
 const manager_role_id = process.env.MANAGER_ROLE_ID
 const styler_role_id = process.env.STYLER_ROLE_ID
 const bot_id = process.env.BOT_ID
+const server_channel_data = JSON.parse(process.env.SERVER_CHANNEL_DATA)
 
 const client = new Discord.Client();
 
@@ -232,7 +234,7 @@ client.on('message', msg => {
         return 0;
     }
     else {
-        console.log(msg.author.id)
+        console.log("msg.author.id = " + msg.author.id)
     }
 
     // 私訊機器人使用序號功能
@@ -385,7 +387,6 @@ client.on('message', msg => {
     else if (msg.content.toLowerCase() === `${prefix}help`) {
         msg.reply(EmbedMessages.CommandsMsgEmbed);
     }
-    
     else if (msg.content.toLowerCase() === `${prefix}info`) {
         msg.reply(EmbedMessages.BotInfoMsgEmbed);
     }
@@ -442,7 +443,7 @@ client.on('message', msg => {
                     msg.reply(`資料表 ${table_name} 清除成功！`);
                 }
                 else {
-                    msg.reply('資料表 ${table_name} 清除失敗');
+                    msg.reply(`資料表 ${table_name} 清除失敗！`);
                 }
             })
         }
@@ -450,6 +451,17 @@ client.on('message', msg => {
         {
             msg.reply('格式錯誤，輸入格式應為 ">>truncate_table 資料表名稱"');
         }
+    }
+    else if (msg.content.toLowerCase().startsWith(`${prefix}ping`)) {
+        latency_data = server_channel_data
+        msg.reply("機器人確認中，請稍後...").then(sent => {
+            GetLatencyData(latency_data).then((res, err) => {
+                EmbedMessages.set_server_status_msg(res).then((res, err) => {
+                    sent.delete({ reason: "Clean Message" })
+                    msg.reply(res);
+                })
+            }).catch(error => { return; })
+        });
     }
     else {
         if (msg.content.toLowerCase().startsWith(`${prefix}`)) {
@@ -484,4 +496,29 @@ async function clean_all_message_in_channel() {
         console.log("Delete message: " + msg.content)
         msg.delete({ reason: "Clean Message" })
     })
+}
+
+function ping(ip, port){
+    var latency = -999;
+    return new Promise((resolve, reject) => {
+        tcpp.ping({address: ip, port: port}, function(err, result) {
+            latency = result.avg
+            resolve(latency)
+        })
+    }).catch(error => { return latency; });
+}
+
+async function GetLatencyData(latency_data){
+    for(k in latency_data) {
+        for (var i = 0; i < latency_data[k].length; i++)
+        {
+            ip = latency_data[k][i]["IP"]
+            port = latency_data[k][i]["Port"]
+            console.log("Ping host: " + ip + ":" + port)
+            await ping(ip, port).then((res, err) => {
+                latency_data[k][i]["Latency"] = res.toFixed(2)
+            }).catch(error => { return; })
+        }
+    }
+    return latency_data
 }
