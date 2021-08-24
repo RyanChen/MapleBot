@@ -67,6 +67,10 @@ client.on('ready', () => {
     })
 
     // serial.drop_table('serial')
+    console.log("===== Member data =====")
+    m = client.guilds.cache.get('667419502119616522').members
+    console.log(m)
+    console.log("===== Member data =====")
 });
 
 client.on('guildMemberAdd', () => {
@@ -501,7 +505,7 @@ async function clean_all_message_in_channel() {
 function ping(ip, port){
     var latency = -999;
     return new Promise((resolve, reject) => {
-        tcpp.ping({address: ip, port: port}, function(err, result) {
+        tcpp.ping({address: ip, port: port, timeout: 1000,  attempts: 3}, function(err, result) {
             latency = result.avg
             resolve(latency)
         })
