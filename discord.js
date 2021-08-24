@@ -67,10 +67,6 @@ client.on('ready', () => {
     })
 
     // serial.drop_table('serial')
-    console.log("===== Member data =====")
-    m = client.guilds.cache.get('667419502119616522').members
-    console.log(m)
-    console.log("===== Member data =====")
 });
 
 client.on('guildMemberAdd', () => {
