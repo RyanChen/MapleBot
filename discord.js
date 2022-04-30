@@ -50,6 +50,7 @@ client.on('ready', () => {
     serial.create_table(sql).then((res) => {
         if (res) {
             console.log("Table serial table is ready.")
+            delay_test()
         }
         else {
             console.log("Table serial is table NOT ready.")
@@ -72,6 +73,12 @@ client.on('ready', () => {
 client.on('guildMemberAdd', () => {
     send_welcome_msg()
 });
+
+async function delay_test() {
+    console.log("1111111")
+    sleep(5000)
+    console.log("2222222")
+}
 
 async function send_welcome_msg() {
     chat_channel = client.channels.cache.get(chat_channel_id)
