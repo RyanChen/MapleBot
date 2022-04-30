@@ -124,6 +124,7 @@ function GetEventMessage(){
         "管理": [],
         "外觀": []
     }
+
     var msg;
     return new Promise((resolve, reject) => {
         calendar.get_event().then((res) => {
