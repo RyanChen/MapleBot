@@ -76,7 +76,7 @@ client.on('guildMemberAdd', () => {
 
 async function delay_test() {
     console.log("1111111")
-    sleep(5000)
+    await sleep(5000)
     console.log("2222222")
 }
 
