@@ -50,9 +50,6 @@ client.on('ready', () => {
     serial.create_table(sql).then((res) => {
         if (res) {
             console.log("Table serial table is ready.")
-            console.log("1")
-            sleep(5000)
-            console.log("2")
         }
         else {
             console.log("Table serial is table NOT ready.")
@@ -73,9 +70,11 @@ client.on('ready', () => {
 });
 
 client.on('guildMemberAdd', () => {
-    chat_channel = client.channels.cache.get(chat_channel_id)
-
-    chat_channel.send("嗨，歡迎加入『伏時夢長』Discord頻道～\n請先看公告，然後到ID對照區留言喔～\nID對照區格式：ID/職業\nEX：綠綠安m/主教")
+    async function () {
+        chat_channel = client.channels.cache.get(chat_channel_id)
+        sleep(2000)
+        chat_channel.send("嗨，歡迎加入『伏時夢長』Discord頻道～\n請先看公告，然後到ID對照區留言喔～\nID對照區格式：ID/職業\nEX：綠綠安m/主教")
+    }
 });
 
 function sleep(ms) {
