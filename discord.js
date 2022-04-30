@@ -50,7 +50,6 @@ client.on('ready', () => {
     serial.create_table(sql).then((res) => {
         if (res) {
             console.log("Table serial table is ready.")
-            delay_test()
         }
         else {
             console.log("Table serial is table NOT ready.")
@@ -74,15 +73,9 @@ client.on('guildMemberAdd', () => {
     send_welcome_msg()
 });
 
-async function delay_test() {
-    console.log("1111111")
-    await sleep(5000)
-    console.log("2222222")
-}
-
 async function send_welcome_msg() {
     chat_channel = client.channels.cache.get(chat_channel_id)
-    sleep(2000)
+    await sleep(2000)
     chat_channel.send("嗨，歡迎加入『伏時夢長』Discord頻道～\n請先看公告，然後到ID對照區留言喔～\nID對照區格式：ID/職業\nEX：綠綠安m/主教")
 }
 
