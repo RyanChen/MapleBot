@@ -69,14 +69,14 @@ client.on('ready', () => {
     // serial.drop_table('serial')
 });
 
-client.on('guildMemberAdd', () => {
-    send_welcome_msg()
+client.on('guildMemberAdd', (member) => {
+    send_welcome_msg(member.id)
 });
 
-async function send_welcome_msg() {
+async function send_welcome_msg(memberId) {
     chat_channel = client.channels.cache.get(chat_channel_id)
     await sleep(5000)
-    chat_channel.send("嗨，歡迎加入『伏時夢長』Discord頻道～\n請先看公告，然後到ID對照區留言喔～\nID對照區格式：ID/職業\nEX：綠綠安m/主教")
+    chat_channel.send("嗨，" + "<@" + memberId + ">" + "歡迎加入『伏時夢長』Discord頻道～\n請先看公告，然後到ID對照區留言喔～\nID對照區格式：ID/職業\nEX：綠綠安m/主教");
 }
 
 function sleep(ms) {
