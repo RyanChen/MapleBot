@@ -1,0 +1,8 @@
+services:
+- type: worker
+  name: MapleBot
+  env: node
+  buildCommand: yarn
+  startCommand: node discord.js
+  plan: free
+  autoDeploy: false
