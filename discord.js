@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const Discord = require('discord.js');
 const {prefix} = require('./configs/config.json');
 const calendar = require('./modules/calendar.js');
